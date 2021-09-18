@@ -9,11 +9,15 @@ public class Player : MonoBehaviour
     [SerializeField] float forwardSpeed;
     GenesManager GM;
     public int Action;
-    int playerNumber;
+    public int playerNumber;
+    int possible = 1;
+    
+
     void Start()
     {
         GM = GameObject.FindObjectOfType<GenesManager>();
         rb = gameObject.GetComponent<Rigidbody2D>();
+
     }
     float min(float a, float b)
     {
@@ -43,15 +47,44 @@ public class Player : MonoBehaviour
 
         gameObject.transform.eulerAngles = rotation;
     }
-    
+    void GetNextPylon()
+    {
+        GameObject[] P = GameObject.FindGameObjectsWithTag("PylonParent");
+        float posmn = 20f;
+        int indc = 0;
+        for (int i = 0; i < P.Length; i++)
+        {
+            if (P[i].transform.position.x > gameObject.transform.position.x)
+            {
+                if (P[i].transform.position.x < posmn)
+                {
+                    indc = i;
+                    posmn = P[i].transform.position.x;
+                }
+            }
+        }
+
+        GM.YDifference[playerNumber] = gameObject.transform.position.y - P[indc].transform.position.y;
+        GM.DistanceUntilNext[playerNumber] = P[indc].transform.position.x - gameObject.transform.position.x;
+
+    }
+
+    public void Die()
+    {
+        GM.SetDeath(playerNumber);
+        Destroy(gameObject);
+    }
 
     void Update()
     {
+        GetNextPylon();
         Action = GM.Actions[playerNumber];
+        
         Vector3 forward = new Vector3(1f, 0f, 0f);
         transform.position += forward * forwardSpeed * Time.deltaTime;
-        if (Action == 1)
+        if (Action == 1 && possible == 1)
         {
+            possible = 0;
             Vector2 dir = new Vector2(0, 1);
             rb.velocity = Vector2.zero;
             rb.AddForce(dir * force, ForceMode2D.Impulse);
@@ -60,15 +93,20 @@ public class Player : MonoBehaviour
         AdjustRotation();
         if (gameObject.transform.position.y < -50)
         {
-            Destroy(gameObject);
+            Die();
         }
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.tag != "Player")
         {
-            Destroy(gameObject);
+            Die();
         }
+    }
+    IEnumerator WaitForJump()
+    {
+        yield return new WaitForSeconds(0.3f);
+        possible = 1;
     }
 
 }

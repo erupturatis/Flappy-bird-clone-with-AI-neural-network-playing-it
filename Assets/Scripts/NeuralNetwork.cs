@@ -19,10 +19,16 @@ public class NeuralNetwork
 
     public float Run(float DistanceUntilNext, float YDifference)
     {
-        DistanceUntilNext = UnityEngine.Random.Range(-5f, 5f);
-        
-        YDifference = UnityEngine.Random.Range(-5f, 5f);
+        //DistanceUntilNext = UnityEngine.Random.Range(-5f, 5f);
+        //YDifference = UnityEngine.Random.Range(-50f, 50f);
+        //Debug.Log(YDifference + "YDIFF RANDOM SUPPOSEDLY");
+
         //WeightsNow [i][j] means the weight from neuron I to neuron J
+        // DistanceUntilNext = 0;
+        DistanceUntilNext /= 3;
+        YDifference *= 5;
+        //Debug.Log(YDifference);
+
         float[,] WeightsNow = new float[11, 11];
         for(int i = 0; i <= 10; i++)
         {
@@ -74,18 +80,21 @@ public class NeuralNetwork
                     Sum = WeightsNow[0,i] * DistanceUntilNext + WeightsNow[1,i] * YDifference + Biases[p];
                     //Debug.Log("THE SUMMM" + Sum + "   " + i);
                     //Debug.Log(WeightsNow[0, i] + "THE F WEIGHT");
-                    Sum = Sigmoid(Sum);
+                    Sum = Relu(Sum);
                     SumsCalculated[i] = Sum;
                 }
+                //Debug.Log(SumsCalculated[0] + "  SUM");
             }
             else if (p == HiddenLayers)
             {
                 for (int i = 0; i < HiddenLayerSize; i++)
                 {
-                    Sum = WeightsNow[i,0] * DistanceUntilNext + Biases[p];
-                    Sum = Sigmoid(Sum);
-                    SumsCalculated[i] = Sum;
+                    //Debug.Log("I " + i + "WEIGHTS  " + WeightsNow[i, 0] + " Distance");
+                    Sum += WeightsNow[i,0] * SumsPrevious[i];
                 }
+                Sum = Sum + Biases[p];
+                Sum = Sigmoid(Sum);
+                SumsCalculated[0] = Sum;
             }
             else
             {
@@ -98,7 +107,7 @@ public class NeuralNetwork
                         Sum += WeightsNow[j,i] * SumsPrevious[j];
                     }
                     Sum += Biases[p];
-                    Sum = Sigmoid(Sum);
+                    Sum = Relu(Sum);
                     SumsCalculated[i] = Sum;
                 }
             }
