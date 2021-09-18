@@ -19,7 +19,9 @@ public class GenesManager : MonoBehaviour
     public float[] YDifference;
     public float[] DistanceUntilNext;
 
-    int NumberSpawned = 50;
+    int NumberSpawned = 100;
+
+    int BirdNumb = 0;
 
 
     void RandomizeWeights()
@@ -45,7 +47,7 @@ public class GenesManager : MonoBehaviour
     }
     float Mutation()
     {
-        return Random.Range(-10f, 10f);
+        return Random.Range(-1f, 1f);
     }
     public void SetDeath(int t)
     {
@@ -56,7 +58,7 @@ public class GenesManager : MonoBehaviour
     {
         for(int i = 0; i <= NumberSpawned-1; i++)
         {
-            Vector3 position = new Vector3(0f, Random.Range(-3f,3f), 0f);
+            Vector3 position = new Vector3(0f, Random.Range(-5f,5f), 0f);
             GameObject bot = Instantiate(bird,position,Quaternion.identity);
             bot.GetComponent<Player>().playerNumber = i;
             //print("spawned");
@@ -86,11 +88,11 @@ public class GenesManager : MonoBehaviour
 
     void CombineNetworks()
     {
-        int Lng = Deaths.Length;
+        int Lng = Deaths.Length-1;
         //Breeds the last 3 birds
-        for(int i = Lng; i >= Lng - 3; i--) 
+        for(int i = Lng; i >= Lng - 4; i--) 
         {
-            for(int j = Lng; j >= Lng - 3; j--)
+            for(int j = Lng; j >= Lng - 4; j--)
             {
                 if (i != j) {
                     int a = Deaths[i];
@@ -105,7 +107,107 @@ public class GenesManager : MonoBehaviour
                     float[,,] w3 = w1;
                     float[] b3 = b1;
 
-                    
+                    for(int r = 0; a <= 6; a++)
+                    {
+                        for(int t = 0; t <= 10; t++)
+                        {
+                            for(int z = 0; z <= 10; z++)
+                            {
+                                float Choice = Random.Range(0f, 1f);
+                                if (Choice > 0.5f) {
+                                    w3[r, t, z] = w1[r, t, z];
+                                }
+                                else
+                                {
+                                    w3[r, t, z] = w2[r, t, z];
+                                }
+                            }
+                        }
+                    }
+                    for (int r = 0; a <= 6; a++)
+                    {
+                        float Choice = Random.Range(0f, 1f);
+                        if (Choice > 0.5f)
+                        {
+                            b3[r] = b1[r];
+                        }
+                        else
+                        {
+                            b3[r] = b2[r];
+                        }
+                    }
+                    anns[BirdNumb].weights = w3;
+                    anns[BirdNumb].Biases = b3;
+                    BirdNumb++;
+
+                }
+            }
+        }
+
+        
+    }
+    void CombineWithMutations()
+    {
+        int Lng = Deaths.Length - 1;
+        for (int i = Lng; i >= Lng - 4; i--)
+        {
+            for (int j = Lng; j >= Lng - 4; j--)
+            {
+                if (i != j)
+                {
+                    int a = Deaths[i];
+                    int b = Deaths[j];
+
+                    float[,,] w1 = anns[a].weights;
+                    float[,,] w2 = anns[b].weights;
+
+                    float[] b1 = anns[a].Biases;
+                    float[] b2 = anns[b].Biases;
+
+                    float[,,] w3 = w1;
+                    float[] b3 = b1;
+
+                    for (int r = 0; a <= 6; a++)
+                    {
+                        for (int t = 0; t <= 10; t++)
+                        {
+                            for (int z = 0; z <= 10; z++)
+                            {
+                                float Choice = Random.Range(0f, 1f);
+                                if (Choice > 0.5f)
+                                {
+                                    w3[r, t, z] = w1[r, t, z];
+                                }
+                                else
+                                {
+                                    w3[r, t, z] = w2[r, t, z];
+                                }
+                                if (Choice < 0.2f)
+                                {
+                                    w3[r, t, z] += Mutation();
+                                }
+                            }
+                        }
+                    }
+                    for (int r = 0; a <= 6; a++)
+                    {
+                        float Choice = Random.Range(0f, 1f);
+                        if (Choice > 0.5f)
+                        {
+                            b3[r] = b1[r];
+                        }
+                        else
+                        {
+                            b3[r] = b2[r];
+                        }
+                        if (Choice < 0.2f)
+                        {
+                            b3[r] += Mutation();
+                        }
+                    }
+                    anns[BirdNumb].weights = w3;
+                    anns[BirdNumb].Biases = b3;
+                    BirdNumb++;
 
                 }
             }
@@ -140,15 +242,26 @@ public class GenesManager : MonoBehaviour
         }
         else
         {
+            Dead = 0;
             print("ALL DEAD");
+            CombineNetworks(); // 20 birds
+            CombineWithMutations(); // 20 birds
+            CombineWithMutations(); // 20 birds
+            CombineWithMutations(); // 20 birds
+            CombineWithMutations(); // 20 birds
+            //100 birds 
+            
+            BirdNumb = 0;
+            SpawnPlayers();
+
         }
 
     }
     // Update is called once per frame
     void Update()
     {
-        //10 Bred from the best
-        //20 Mutate 
+        //20 Bred from the best
+        //30 Mutate 
         if(K == 0)
         {
             Flow();
@@ -159,7 +272,7 @@ public class GenesManager : MonoBehaviour
     IEnumerator Wait3Frames()
     {
 
-        yield return new WaitForSeconds(0.2f);
+        yield return new WaitForSeconds(0.1f);
         K = 0;
     }
 }
