@@ -5,15 +5,21 @@ using UnityEngine;
 public class MapGeneration : MonoBehaviour
 {
     public GameObject PylonParent;
-    void Start()
+
+    public void GenerateInit()
     {
-        //initial generation
         Vector3 position = new Vector3(5f, Random.Range(-3, 3), 0f);
         Instantiate(PylonParent, position, Quaternion.identity);
         position = new Vector3(10f, Random.Range(-3, 3), 0f);
         Instantiate(PylonParent, position, Quaternion.identity);
         position = new Vector3(15f, Random.Range(-3, 3), 0f);
         Instantiate(PylonParent, position, Quaternion.identity);
+    }
+
+    void Start()
+    {
+        //initial generation
+        GenerateInit();
     }
 
 

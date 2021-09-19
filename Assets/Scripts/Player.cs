@@ -66,12 +66,13 @@ public class Player : MonoBehaviour
 
         GM.YDifference[playerNumber] = gameObject.transform.position.y - P[indc].transform.position.y;
         GM.DistanceUntilNext[playerNumber] = P[indc].transform.position.x - gameObject.transform.position.x;
+        //Debug.Log(GM.YDifference[playerNumber] + "            " + GM.DistanceUntilNext[playerNumber]);
 
     }
 
     public void Die()
     {
-        GM.SetDeath(playerNumber);
+        GM.SetDeath(playerNumber,  gameObject.transform.position.x);
         Destroy(gameObject);
     }
 
@@ -79,11 +80,12 @@ public class Player : MonoBehaviour
     {
         GetNextPylon();
         Action = GM.Actions[playerNumber];
-        
+        //print(playerNumber + "    " + Action);
         Vector3 forward = new Vector3(1f, 0f, 0f);
         transform.position += forward * forwardSpeed * Time.deltaTime;
         if (Action == 1 && possible == 1)
         {
+            StartCoroutine(WaitForJump());
             possible = 0;
             Vector2 dir = new Vector2(0, 1);
             rb.velocity = Vector2.zero;
@@ -91,7 +93,7 @@ public class Player : MonoBehaviour
 
         }
         AdjustRotation();
-        if (gameObject.transform.position.y < -50)
+        if (gameObject.transform.position.y < -5)
         {
             Die();
         }

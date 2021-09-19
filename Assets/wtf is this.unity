@@ -148,7 +148,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1421682903}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0297b7c4bf1d92045aeaec381142c516, type: 3}
   m_Name: 
@@ -182,6 +182,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bird: {fileID: 2368982360484112170, guid: 849c49b46d5e4554eb82e16824da2fef, type: 3}
   Actions: 
+  YDifference: []
+  DistanceUntilNext: []
 --- !u!1 &1844547010
 GameObject:
   m_ObjectHideFlags: 0
@@ -260,7 +262,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1844547010}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -10}
+  m_LocalPosition: {x: 2.34, y: 0, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}

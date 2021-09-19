@@ -4,31 +4,55 @@ using UnityEngine;
 using System;
 public class NeuralNetwork 
 {
-    public float[,,] weights;
+    public float[,,] weights ;
     public float[] Biases;
     public int HiddenLayers;
     public int HiddenLayerSize;
+    public int NetworkNum;
     
-    public NeuralNetwork(int HiddenLayersI,int HiddenLayerSizeI,float[,,] WeightsI, float[] BiasesI)
+    public NeuralNetwork(int HiddenLayersI,int HiddenLayerSizeI, int Num)
     {
-        weights = WeightsI;
+        NetworkNum = Num;
+        weights = new float[7, 11, 11];
+
         HiddenLayerSize = HiddenLayerSizeI;
         HiddenLayers = HiddenLayersI;
-        Biases = BiasesI;
-    }
+        Biases = new float[11];
 
+
+    }
+    public void SetW(float[,,] WeightsI)
+    {
+        for (int i = 0; i <= 6; i++)
+        {
+            for (int j = 0; j <= 10; j++)
+            {
+                for (int t = 0; t <= 10; t++)
+                {
+                    weights[i, j, t] = WeightsI[i, j, t];
+                }
+            }
+        }
+    }
+    public void SetB(float[] BiasesI)
+    {
+        for (int i = 0; i <= 6; i++)
+        {
+            Biases[i] = BiasesI[i];
+        }
+    }
     public float Run(float DistanceUntilNext, float YDifference)
     {
         //DistanceUntilNext = UnityEngine.Random.Range(-5f, 5f);
-        //YDifference = UnityEngine.Random.Range(-50f, 50f);
+        //YDifference = UnityEngine.Random.Range(-5f, 5f);
         //Debug.Log(YDifference + "YDIFF RANDOM SUPPOSEDLY");
 
         //WeightsNow [i][j] means the weight from neuron I to neuron J
         // DistanceUntilNext = 0;
-        DistanceUntilNext /= 3;
-        YDifference *= 5;
-        //Debug.Log(YDifference);
 
+
+        //Debug.Log(YDifference);
+       // Debug.Log("IN NEURAL NETWORK " + weights[0,0,0] + "    " + NetworkNum);
         float[,] WeightsNow = new float[11, 11];
         for(int i = 0; i <= 10; i++)
         {
@@ -80,10 +104,10 @@ public class NeuralNetwork
                     Sum = WeightsNow[0,i] * DistanceUntilNext + WeightsNow[1,i] * YDifference + Biases[p];
                     //Debug.Log("THE SUMMM" + Sum + "   " + i);
                     //Debug.Log(WeightsNow[0, i] + "THE F WEIGHT");
-                    Sum = Relu(Sum);
+                    Sum = Sigmoid(Sum);
                     SumsCalculated[i] = Sum;
                 }
-                //Debug.Log(SumsCalculated[0] + "  SUM");
+                //Debug.Log(WeightsNow[0, 0] + "  SUM     " + NetworkNum);
             }
             else if (p == HiddenLayers)
             {
@@ -107,7 +131,7 @@ public class NeuralNetwork
                         Sum += WeightsNow[j,i] * SumsPrevious[j];
                     }
                     Sum += Biases[p];
-                    Sum = Relu(Sum);
+                    Sum = Sigmoid(Sum);
                     SumsCalculated[i] = Sum;
                 }
             }
