@@ -8,11 +8,11 @@ public class MapGeneration : MonoBehaviour
 
     public void GenerateInit()
     {
-        Vector3 position = new Vector3(5f, Random.Range(-3, 3), 0f);
-        Instantiate(PylonParent, position, Quaternion.identity);
-        position = new Vector3(10f, Random.Range(-3, 3), 0f);
+        Vector3 position = new Vector3(7.5f, Random.Range(-3, 3), 0f);
         Instantiate(PylonParent, position, Quaternion.identity);
         position = new Vector3(15f, Random.Range(-3, 3), 0f);
+        Instantiate(PylonParent, position, Quaternion.identity);
+        position = new Vector3(22.5f, Random.Range(-3, 3), 0f);
         Instantiate(PylonParent, position, Quaternion.identity);
     }
 

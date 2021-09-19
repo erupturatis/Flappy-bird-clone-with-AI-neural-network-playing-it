@@ -180,7 +180,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 884fef889dfce9546aa7c89347a6b2f5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bird: {fileID: 2368982360484112170, guid: 849c49b46d5e4554eb82e16824da2fef, type: 3}
+  bird: {fileID: 3430568106540734362, guid: 849c49b46d5e4554eb82e16824da2fef, type: 3}
   Actions: 
   YDifference: []
   DistanceUntilNext: []

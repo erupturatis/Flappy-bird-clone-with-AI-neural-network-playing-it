@@ -21,6 +21,8 @@ public class GenesManager : MonoBehaviour
     //OVERWRITING THE FIRST BIRDS IS A BIG NONO
     //CHANGE THE METHON NOT THE LAST TO DIE, THE MOST FAR
     //KEEP THE BEST 3
+    MapGeneration MG;
+
     public int[] Actions;
 
     public float[] YDifference;
@@ -99,7 +101,9 @@ public class GenesManager : MonoBehaviour
         Weights = new float[11,11,11];
         Biases = new float[11];
         First5 = new int[7];
-        
+
+        MG = GameObject.FindObjectOfType<MapGeneration>();
+
         for (int i = 0; i <= NumberSpawned-1; i++)
         {
             RandomizeWeights();
@@ -433,8 +437,29 @@ public class GenesManager : MonoBehaviour
             //100 birds 
             TransferBirds();
             BirdNumb = 0;
+            DestroyAllPylons();
+            MG.GenerateInit();
             SpawnPlayers();
 
+        }
+
+    }
+    void DestroyAllPylons()
+    {
+        GameObject[] T = GameObject.FindGameObjectsWithTag("PylonParent");
+        for(int i = 0; i < T.Length; i++)
+        {
+            Destroy(T[i]);
+        }
+    }
+
+    public void KillAllPlayers()
+    {
+        GameObject[] T = GameObject.FindGameObjectsWithTag("Player");
+        for (int i = 0; i < T.Length; i++)
+        {
+            Player Pl = T[i].GetComponent<Player>();
+            Pl.Die();
         }
 
     }
@@ -442,7 +467,8 @@ public class GenesManager : MonoBehaviour
     void Update()
     {
         //20 Bred from the best
-        //30 Mutate 
+        //40 Mutate 
+        //40 new birds
         if(K == 0)
         {
             Flow();

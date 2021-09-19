@@ -57,7 +57,7 @@ public class NeuralNetwork
         {
             Sign = -1f;
         }
-
+        Sign = 0;
         //Debug.Log(YDifference);
         //Debug.Log("IN NEURAL NETWORK " + weights[0,0,0] + "    " + NetworkNum);
         float[,] WeightsNow = new float[11, 11];

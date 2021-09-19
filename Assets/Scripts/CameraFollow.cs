@@ -8,6 +8,8 @@ public class CameraFollow : MonoBehaviour
     public float ms;
     void Update()
     {
+        player = GameObject.FindGameObjectWithTag("Player");
+        transform.position = new Vector3(player.transform.position.x, 0f , -10f);
         //gameObject.transform.position = new Vector3(player.transform.position.x, 0f, -10f);
         if (Input.GetKey("a"))
         {
