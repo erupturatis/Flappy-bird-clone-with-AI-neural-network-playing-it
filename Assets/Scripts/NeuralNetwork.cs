@@ -41,7 +41,7 @@ public class NeuralNetwork
             Biases[i] = BiasesI[i];
         }
     }
-    public float Run(float DistanceUntilNext, float YDifference)
+    public float Run(float DistanceUntilNext, float YDifference, float Sign)
     {
         //DistanceUntilNext = UnityEngine.Random.Range(-5f, 5f);
         //YDifference = UnityEngine.Random.Range(-5f, 5f);
@@ -49,10 +49,17 @@ public class NeuralNetwork
 
         //WeightsNow [i][j] means the weight from neuron I to neuron J
         // DistanceUntilNext = 0;
-
+        if (YDifference >= 0)
+        {
+            Sign = 1f;
+        }
+        else
+        {
+            Sign = -1f;
+        }
 
         //Debug.Log(YDifference);
-       // Debug.Log("IN NEURAL NETWORK " + weights[0,0,0] + "    " + NetworkNum);
+        //Debug.Log("IN NEURAL NETWORK " + weights[0,0,0] + "    " + NetworkNum);
         float[,] WeightsNow = new float[11, 11];
         for(int i = 0; i <= 10; i++)
         {
@@ -101,10 +108,10 @@ public class NeuralNetwork
                 //Calculating the initial sums from the input
                 for (int i = 0; i < HiddenLayerSize; i++)
                 {
-                    Sum = WeightsNow[0,i] * DistanceUntilNext + WeightsNow[1,i] * YDifference + Biases[p];
+                    Sum = WeightsNow[0,i] * DistanceUntilNext + WeightsNow[1,i] * YDifference + WeightsNow[1, i]*Sign + Biases[p];
                     //Debug.Log("THE SUMMM" + Sum + "   " + i);
                     //Debug.Log(WeightsNow[0, i] + "THE F WEIGHT");
-                    Sum = Sigmoid(Sum);
+                    Sum = Relu(Sum);
                     SumsCalculated[i] = Sum;
                 }
                 //Debug.Log(WeightsNow[0, 0] + "  SUM     " + NetworkNum);
@@ -131,7 +138,7 @@ public class NeuralNetwork
                         Sum += WeightsNow[j,i] * SumsPrevious[j];
                     }
                     Sum += Biases[p];
-                    Sum = Sigmoid(Sum);
+                    Sum = Relu(Sum);
                     SumsCalculated[i] = Sum;
                 }
             }

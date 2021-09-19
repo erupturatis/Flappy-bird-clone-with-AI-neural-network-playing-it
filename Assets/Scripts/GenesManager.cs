@@ -26,7 +26,7 @@ public class GenesManager : MonoBehaviour
     public float[] YDifference;
     public float[] DistanceUntilNext;
 
-    int NumberSpawned = 5;
+    int NumberSpawned = 100;
 
     int BirdNumb = 0;
 
@@ -89,6 +89,7 @@ public class GenesManager : MonoBehaviour
 
     void Start()
     {
+        Time.timeScale = 2f;
         Deaths = new int[NumberSpawned + 1];
         DeathsFitness = new float[NumberSpawned + 1];
 
@@ -117,39 +118,67 @@ public class GenesManager : MonoBehaviour
     void CombineNetworks()
     {
         //Take first 5 winner birds
-        int Lng = Deaths.Length - 1;
+        int Lng = NumberSpawned - 1;
 
         annsNewGen[BirdNumb] = new NeuralNetwork(3, 9, BirdNumb);
         annsNewGen[BirdNumb].SetW(anns[Deaths[Lng-BirdNumb]].weights);
+        annsNewGen[BirdNumb].SetB(anns[Deaths[Lng - BirdNumb]].Biases);
         //print(Deaths[Lng - BirdNumb]);
         BirdNumb++;
         annsNewGen[BirdNumb] = new NeuralNetwork(3, 9, BirdNumb);
         annsNewGen[BirdNumb].SetW(anns[Deaths[Lng - BirdNumb]].weights);
+        annsNewGen[BirdNumb].SetB(anns[Deaths[Lng - BirdNumb]].Biases);
         //print(Deaths[Lng - BirdNumb]);
         BirdNumb++;
         annsNewGen[BirdNumb] = new NeuralNetwork(3, 9, BirdNumb);
         annsNewGen[BirdNumb].SetW(anns[Deaths[Lng - BirdNumb]].weights);
+        annsNewGen[BirdNumb].SetB(anns[Deaths[Lng - BirdNumb]].Biases);
         //print(Deaths[Lng - BirdNumb]);
         BirdNumb++;
         annsNewGen[BirdNumb] = new NeuralNetwork(3, 9, BirdNumb);
         annsNewGen[BirdNumb].SetW(anns[Deaths[Lng - BirdNumb]].weights);
+        annsNewGen[BirdNumb].SetB(anns[Deaths[Lng - BirdNumb]].Biases);
         //print(Deaths[Lng - BirdNumb]);
         BirdNumb++;
         annsNewGen[BirdNumb] = new NeuralNetwork(3, 9, BirdNumb);
         annsNewGen[BirdNumb].SetW(anns[Deaths[Lng - BirdNumb]].weights);
+        annsNewGen[BirdNumb].SetB(anns[Deaths[Lng - BirdNumb]].Biases);
         //print(Deaths[Lng - BirdNumb]);
         BirdNumb++;
 
-        print(Deaths[Lng] + " " + Deaths[Lng-1] + " " + Deaths[Lng-2] + " " + Deaths[Lng-3] + " " + Deaths[Lng-4] + " ");
+        //print(Deaths[Lng] + " " + Deaths[Lng-1] + " " + Deaths[Lng-2] + " " + Deaths[Lng-3] + " " + Deaths[Lng-4] + " ");
 
-        
+        for (int o = 0; o <= 5; o++)
+        {
+            int a0 = Deaths[0];
+            float[,,] w10 = anns[a0].weights;
+            float[] b10 = anns[a0].Biases;
+
+            for (int r = 0; r <= 6; r++)
+            {
+                for (int t = 0; t <= 10; t++)
+                {
+                    for (int z = 0; z <= 10; z++)
+                    {
+                        w10[r, t, z] += Random.Range(-0.1f, 0.1f);
+
+                    }
+                }
+                b10[r] += Random.Range(-0.1f, 0.1f);
+            }
+
+            annsNewGen[BirdNumb] = new NeuralNetwork(3, 9, BirdNumb);
+            annsNewGen[BirdNumb].SetW(w10);
+            annsNewGen[BirdNumb].SetB(b10);
+            BirdNumb++;
+        }
         //Breeds the last 3 birds
-        for(int i = Lng; i >= Lng - 4; i--) 
+        for (int i = Lng; i >= Lng - 4; i--) 
         {
             for(int j = Lng; j >= Lng - 4; j--)
             {
                 if (i != j) {
-                    //DO NOT OVERWRITE THE BIRDS LIKE I DID HERE
+
                     int a = Deaths[i];
                     int b = Deaths[j];
 
@@ -162,7 +191,7 @@ public class GenesManager : MonoBehaviour
                     float[,,] w3 = new float[7,11,11];
                     float[] b3 = new float[10];
 
-                    for(int r = 0; a <= 6; a++)
+                    for(int r = 0; r <= 6; r++)
                     {
                         for(int t = 0; t <= 10; t++)
                         {
@@ -224,7 +253,7 @@ public class GenesManager : MonoBehaviour
                     float[,,] w3 = new float[7, 11, 11];
                     float[] b3 = new float[10];
 
-                    for (int r = 0; a <= 6; a++)
+                    for (int r = 0; r <= 6; r++)
                     {
                         for (int t = 0; t <= 10; t++)
                         {
@@ -263,8 +292,8 @@ public class GenesManager : MonoBehaviour
                         }
                     }
                     annsNewGen[BirdNumb] = new NeuralNetwork(3, 9, BirdNumb);
-                    anns[BirdNumb].SetW(w3);
-                    anns[BirdNumb].SetB(b3);
+                    annsNewGen[BirdNumb].SetW(w3);
+                    annsNewGen[BirdNumb].SetB(b3);
                     BirdNumb++;
 
                 }
@@ -293,13 +322,13 @@ public class GenesManager : MonoBehaviour
                     float[,,] w3 = new float[7, 11, 11];
                     float[] b3 = new float[10];
 
-                    for (int r = 0; a <= 6; a++)
+                    for (int r = 0; r <= 6; r++)
                     {
                         for (int t = 0; t <= 10; t++)
                         {
                             for (int z = 0; z <= 10; z++)
                             {
-                                w3[r, t, z] = Random.Range(-2f,2f);
+                                w3[r, t, z] = Random.Range(-1f, 1f);
                             }
                         }
                     }
@@ -309,8 +338,8 @@ public class GenesManager : MonoBehaviour
 
                     }
                     annsNewGen[BirdNumb] = new NeuralNetwork(3, 9, BirdNumb);
-                    anns[BirdNumb].SetW(w3);
-                    anns[BirdNumb].SetB(b3);
+                    annsNewGen[BirdNumb].SetW(w3);
+                    annsNewGen[BirdNumb].SetB(b3);
                     BirdNumb++;
 
                     if(BirdNumb == 100)
@@ -337,7 +366,7 @@ public class GenesManager : MonoBehaviour
 
         for(int i=0;i<= NumberSpawned - 1; i++)
         {
-            print(Nums[0].fitness + "    " + Nums[0].birdN);
+            //print(Nums[i].fitness + "    " + Nums[i].birdN + "     I "+ i );
         }
 
         for (int i = NumberSpawned - 1; i >= NumberSpawned - 5; i--)
@@ -367,7 +396,7 @@ public class GenesManager : MonoBehaviour
             for (int i = 0; i <= NumberSpawned-1; i++)
             {
 
-                float Decision = anns[i].Run(DistanceUntilNext[i], YDifference[i]);
+                float Decision = anns[i].Run(DistanceUntilNext[i], YDifference[i], 0f);
 
                 //Debug.Log( "DECISION MADE     " + Decision  + "    " + i);
 
@@ -375,7 +404,7 @@ public class GenesManager : MonoBehaviour
 
                 float Ds = Random.Range(0f, 1f);
 
-                if (Ds < Decision)
+                if (0.3f < Decision)
                 {
                     Actions[i] = 0;
                 }
@@ -424,7 +453,7 @@ public class GenesManager : MonoBehaviour
     IEnumerator Wait3Frames()
     {
 
-        yield return new WaitForSeconds(0.2f);
+        yield return new WaitForSeconds(0.1f);
         K = 0;
     }
 }

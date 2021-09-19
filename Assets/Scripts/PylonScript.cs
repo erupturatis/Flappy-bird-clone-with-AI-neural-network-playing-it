@@ -14,7 +14,7 @@ public class PylonScript : MonoBehaviour
     {
         if(Camera.transform.position.x - gameObject.transform.position.x > 10f)
         {
-            Destroy(gameObject);
+            //Destroy(gameObject);
         }
         if(Camera.transform.position.x > gameObject.transform.position.x && HasGenerated == 0)
         {

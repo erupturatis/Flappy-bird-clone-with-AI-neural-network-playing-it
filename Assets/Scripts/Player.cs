@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Player : MonoBehaviour
 {
@@ -11,12 +12,13 @@ public class Player : MonoBehaviour
     public int Action;
     public int playerNumber;
     int possible = 1;
-    
+    public Text Txt;
 
     void Start()
     {
         GM = GameObject.FindObjectOfType<GenesManager>();
         rb = gameObject.GetComponent<Rigidbody2D>();
+        
 
     }
     float min(float a, float b)
@@ -50,7 +52,7 @@ public class Player : MonoBehaviour
     void GetNextPylon()
     {
         GameObject[] P = GameObject.FindGameObjectsWithTag("PylonParent");
-        float posmn = 20f;
+        float posmn = 2000f;
         int indc = 0;
         for (int i = 0; i < P.Length; i++)
         {
@@ -80,7 +82,7 @@ public class Player : MonoBehaviour
     {
         GetNextPylon();
         Action = GM.Actions[playerNumber];
-        //print(playerNumber + "    " + Action);
+        Txt.text = "" + playerNumber;
         Vector3 forward = new Vector3(1f, 0f, 0f);
         transform.position += forward * forwardSpeed * Time.deltaTime;
         if (Action == 1 && possible == 1)
